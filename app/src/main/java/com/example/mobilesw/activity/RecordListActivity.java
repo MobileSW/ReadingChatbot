@@ -72,7 +72,7 @@ public class RecordListActivity extends AppCompatActivity {
                         for (DocumentSnapshot snapshot : task.getResult()){
                             RecordInfo recordInfo = new RecordInfo(snapshot.getString("title") , snapshot.getString("readtime") ,
                                     snapshot.getString("description"), (ArrayList<String>) snapshot.get("contents"),
-                                    snapshot.getString("publisher"), snapshot.getDate("createdAt"));
+                                    snapshot.getString("publisher"), snapshot.getDate("createdAt"), snapshot.getString("dates"));
                             arrayList.add(recordInfo);
                         }
                         adapter.notifyDataSetChanged();

@@ -14,8 +14,9 @@ public class RecordInfo implements Serializable {
     private String publisher;
     private Date createdAt;
     private String id;
+    public String dates;
 
-    public RecordInfo(String title, String readtime, String description, ArrayList<String> contents, String publisher, Date createdAt, String id){
+    public RecordInfo(String title, String readtime, String description, ArrayList<String> contents, String publisher, Date createdAt, String id, String dates){
         this.title = title;
         this.readtime = readtime;
         this.description = description;
@@ -23,16 +24,17 @@ public class RecordInfo implements Serializable {
         this.publisher = publisher;
         this.createdAt = createdAt;
         this.id = id;
+        this.dates = dates;
     }
 
-    public RecordInfo(String title,  String readtime,String description, ArrayList<String> contentsList, String uid, Date date) {
+    public RecordInfo(String title,  String readtime,String description, ArrayList<String> contentsList, String uid, Date date, String dates) {
         this.title = title;
         this.readtime = readtime;
         this.description = description;
         this.contents = contentsList;
         this.publisher = uid;
         this.createdAt = date;
-
+        this.dates = dates;
     }
 
 
@@ -45,6 +47,7 @@ public class RecordInfo implements Serializable {
         docData.put("readtime",readtime);
         docData.put("description",description);
         docData.put("contents",contents);
+        docData.put("dates",dates);
         return  docData;
     }
 
@@ -87,5 +90,11 @@ public class RecordInfo implements Serializable {
     }
     public void setId(String id){
         this.id = id;
+    }
+    public String getDate(){
+        return this.dates;
+    }
+    public void setDate(String dates){
+        this.dates = dates;
     }
 }
