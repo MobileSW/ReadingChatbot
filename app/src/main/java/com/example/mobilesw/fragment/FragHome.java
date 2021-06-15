@@ -1,12 +1,12 @@
 package com.example.mobilesw.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,25 +14,23 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.NumberPicker;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.example.mobilesw.R;
+import com.example.mobilesw.activity.LoginActivity;
 import com.example.mobilesw.activity.MainActivity;
 import com.example.mobilesw.adapter.ChatAdapter;
 import com.example.mobilesw.info.ChatItem;
-import com.example.mobilesw.info.MemberInfo;
+import com.example.mobilesw.info.PostInfo;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,6 +40,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -50,8 +49,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-import java.util.Random;
 
 public class FragHome extends Fragment {
     FirebaseUser user;
@@ -72,15 +69,16 @@ public class FragHome extends Fragment {
     private ImageView mainIcon;
     private Handler questionHandler;
     private Handler reportHandler;
-    private int answerNum = 0;
+    private int reportNum = 0;
     private int questionNum = 0;
     private boolean isQuestion = false;
     private boolean isReport = false;
     private boolean isRandomChat = false;
     private boolean isBookReport = false;
     private String book_title="";
-    private ArrayList<String> questionList = new ArrayList<>(Arrays.asList("어떤 책을 읽었는지 선택해줘", "어떤 내용인지 궁금하다~ 간단하게 설명해줘"));
-    private ArrayList<String> reportList = new ArrayList<>(Arrays.asList("어떤 책을 읽었는지 선택해줘", "어떤 내용의 책이야?", "책을 읽고 느낀점을 말해줘", "책을 한마디로 표현하자면?"));
+    private String book_image="";
+    private ArrayList<String> questionList = new ArrayList<>(Arrays.asList("어떤 내용의 책이야?"));
+    private ArrayList<String> reportList = new ArrayList<>(Arrays.asList("어떤 내용의 책이야?", "책을 읽고 느낀점을 말해줘", "책을 한마디로 표현하자면?"));
     private ArrayList<String> answerList = new ArrayList<>();
 
     SharedPreferences sp;
@@ -231,10 +229,32 @@ public class FragHome extends Fragment {
                     msgBtn.setEnabled(true);
                 }
 
+                if(answer!=null) {
+                    String answerStr= questionList.get(questionNum-2);
+                    switch (answerStr) {
+                        case "어떤 내용의 책이야?":
+                            answerList.add("책 줄거리: "+answer);
+                            break;
+                        case "내가 주인공이었으면 어떻게 했을까?":
+                            answerList.add("내가 주인공이었다면: "+answer);
+                            break;
+                        case "가장 기억에 남는 부분은 뭐야?":
+                            answerList.add("가장 인상깊은 장면: "+answer);
+                            break;
+                        case "주인공에게 본받을 점은?":
+                            answerList.add("주인공에게 본받을 점: "+answer);
+                            break;
+                        case "어떤 등장인물이 좋았고 왜 좋았는지 알려줘~":
+                            answerList.add("가장 좋았던 인물과 좋은 이유: "+answer);
+                            break;
+                        case "새롭게 알게 된 점은 뭐야?":
+                            answerList.add("새롭게 알게 된 점: "+answer);
+                            break;
+                    }
+                }
+
                 // 독후감 작성 상태라면 독후감에 필요한 양식을 채팅봇 메세지로 설정함
                 if (questionNum == 0) {
-                    sendMsg(questionList.get(questionNum), "bot");
-                    questionNum++;
                     // "어떤 책을 읽었는지 선택해줘" 책 선택 화면과 연결
                     ((MainActivity)getActivity()).replaceFragment(FragSearch.newInstance());
                     Bundle bundle = new Bundle();
@@ -247,16 +267,24 @@ public class FragHome extends Fragment {
                     msgBtn.setEnabled(false);
                     sendMsg("얘기해줘서 고마워^^ 네 얘기는 독후감 페이지에 정리했어", "bot");
                     isQuestion = false;
+                    uploadReport();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable(){
+                        @Override
+                        public void run() {
+                            startIntent();
+                        }
+                    },1500);
                 } else {
-                    sendMsg(questionList.get(questionNum), "bot");
+                    sendMsg(questionList.get(questionNum-1), "bot");
                     questionNum++;
-
                 }
             }
 
         };
 
         reportHandler =new Handler() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void handleMessage (Message msg){
                 Bundle bd = msg.getData();
@@ -264,31 +292,54 @@ public class FragHome extends Fragment {
                 Boolean report = bd.getBoolean("report");
                 String answer = bd.getString("answer");
 
+                System.out.println("soopy"+reportNum);
+
                 // 랜덤 질문 상태인지 독후감 작성 상태인지 기록, 사용자 채팅 허용
                 if (report) {
                     isReport = true;
                     msgBtn.setEnabled(true);
                 }
 
+                if(answer!=null) {
+                    switch (reportNum-1) {
+                        case 1:
+                            answerList.add("책 줄거리: "+answer);
+                            break;
+                        case 2:
+                            answerList.add("책을 읽은 후 느낀점: "+answer);
+                            break;
+                        case 3:
+                            answerList.add("이 책은 한 마디로: "+answer);
+                            break;
+                    }
+
+                }
+
                 // 독후감 작성 상태라면 독후감에 필요한 양식을 채팅봇 메세지로 설정함
-                if (answerNum == 0) {
-                    sendMsg(reportList.get(answerNum), "bot");
-                    answerNum++;
+                if (reportNum == 0) {
                     // "어떤 책을 읽었는지 선택해줘" 책 선택 화면과 연결
                     ((MainActivity)getActivity()).replaceFragment(FragSearch.newInstance());
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("isBookReport",true);
                     getParentFragmentManager().setFragmentResult("chat",bundle);
 
-                } else if(answerNum == 4) {
+                } else if(reportNum == 4) {
                     // 질문 종료
-                    answerNum = 0;
+                    reportNum = 0;
                     msgBtn.setEnabled(false);
                     sendMsg("얘기해줘서 고마워^^ 네 얘기는 독후감 페이지에 정리했어", "bot");
                     isReport = false;
+                    uploadReport();
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable(){
+                        @Override
+                        public void run() {
+                            startIntent();
+                        }
+                    },1500);
                 } else {
-                    sendMsg(reportList.get(answerNum), "bot");
-                    answerNum++;
+                    sendMsg(reportList.get(reportNum-1), "bot");
+                    reportNum++;
                 }
             }
         };
@@ -297,6 +348,8 @@ public class FragHome extends Fragment {
             isRandomChat = getArguments().getBoolean("isRandomChat");
             isBookReport = getArguments().getBoolean("isBookReport");
             book_title = getArguments().getString("book_title");
+            book_image = getArguments().getString("book_image");
+            System.out.println("soopy"+book_image);
             System.out.println("랜덤챗으로 다시 돌아왔는가?" + isRandomChat);
             if(isRandomChat){
                 questionNum=1;
@@ -306,17 +359,27 @@ public class FragHome extends Fragment {
                 String str = name+"이(가) 선택한 책은 "+book_title+"(이)야";
                 setUI();
                 sendMsg(str,"bot");
+
+                // 이전 대화가 완료되지 않았을 때 남아있는 데이터 제거
+                if(answerList.size() != 0)
+                    answerList.clear();
+                answerList.add("책 제목: " + book_title);
                 randomQuestion();
             }
             if(isBookReport){
-                answerNum=1;
+                reportNum =1;
                 sp = getContext().getSharedPreferences("sp", Context.MODE_PRIVATE);
                 String name = sp.getString("name", "");
                 System.out.println("이름 : "+name);
                 String str = name+"이(가) 선택한 책은 "+book_title+"(이)야";
                 setUI();
                 sendMsg(str,"bot");
+
+                // 이전 대화가 완료되지 않았을 때 남아있는 데이터 제거
+                if(answerList.size() != 0)
+                    answerList.clear();
                 setBundle("report", reportHandler);
+                answerList.add("책 제목: " + book_title);
             }
         }
 
@@ -392,8 +455,8 @@ public class FragHome extends Fragment {
             System.out.println("Flag"+isQuestion+isReport);
 
             //소프트키패드 안보이도록
-            //InputMethodManager imm=(InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            //imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),0);
+            InputMethodManager imm=(InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),0);
 
 
             Bundle bd = new Bundle();
@@ -455,6 +518,44 @@ public class FragHome extends Fragment {
 
     }
 
+    public void uploadReport() {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        DocumentReference docRef = firestore.collection("posts").document();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        // 사진
+        ArrayList<String> contents = new ArrayList<String>();
+
+        // 글
+        String answerStr = "";
+        for (String s : answerList)
+        {
+            answerStr += s + "\n";
+        }
+
+        if(book_image!= null){
+            contents.add(book_image);
+        }
+        System.out.println("soopy"+answerStr);
+
+        PostInfo postInfo = new PostInfo(book_title+" 독후감", answerStr, contents, auth.getUid() ,new Date());
+        docRef.set(postInfo.getPostInfo())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        answerList.clear();
+                        book_image = "";
+                        book_title = "";
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                    }
+                });
+
+    }
+
     // Handler에 번들 msg 전달
     public void setBundle(String msg, Handler handler) {
         Bundle bd = new Bundle();
@@ -471,6 +572,15 @@ public class FragHome extends Fragment {
 
     public void setUI() {
         chatNavi.setVisibility(View.GONE);
+    }
+
+    private void startIntent() {
+        Intent intent= new Intent(getActivity(),MainActivity.class);;
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra("fragnum",3);
+        startActivity(intent);
     }
 
 

@@ -34,7 +34,7 @@ import java.util.HashMap;
 public class BookInfoActivity extends AppCompatActivity {
 
     private BookInfo bookInfo;
-    private Button btn_to_library,btn_read_now,btn_book_report,btn_select_book;
+    private Button btn_to_library,btn_read_now,btn_book_report,btn_select_book,btn_post_book;
     private HashMap<String,String> book;
 
     private String bTitle="",bAuthor="",bImg="",bPubdate="",bPublisher="",bDesc ="";
@@ -43,7 +43,7 @@ public class BookInfoActivity extends AppCompatActivity {
     FirebaseFirestore db;
     DocumentReference docRef;
 
-    private boolean isRandomChat,isBookReport,isLibrary;
+    private boolean isRandomChat,isBookReport,isLibrary,isPost;
     private GregorianCalendar gc;
 
 
@@ -56,12 +56,14 @@ public class BookInfoActivity extends AppCompatActivity {
         btn_read_now = findViewById(R.id.btn_read_now);
         btn_book_report = findViewById(R.id.btn_book_report);
         btn_select_book = findViewById(R.id.btn_select_book);
+        btn_post_book = findViewById(R.id.btn_post_book);
 
         Intent intent = getIntent();
         bookInfo = (BookInfo)intent.getSerializableExtra("bookInfo");
         isLibrary=intent.getBooleanExtra("isLibrary",false);
         isRandomChat = intent.getBooleanExtra("isRandomChat",false);
         isBookReport = intent.getBooleanExtra("isBookReport",false);
+        isPost = intent.getBooleanExtra("isPost",false);
         gc = (GregorianCalendar)intent.getSerializableExtra("date");
 
 
@@ -85,6 +87,12 @@ public class BookInfoActivity extends AppCompatActivity {
             ll_btn_library.setVisibility(ll_btn_library.VISIBLE);
             btn_to_library.setVisibility(btn_to_library.GONE);
             btn_select_book.setVisibility(btn_select_book.VISIBLE);
+        }
+        // 만약 독후감 글쓰기인 경우
+        if(isPost){
+            ll_btn_library.setVisibility(ll_btn_library.VISIBLE);
+            btn_to_library.setVisibility(btn_to_library.GONE);
+            btn_post_book.setVisibility(btn_post_book.VISIBLE);
         }
 
         bTitle=bookInfo.getTitle();
@@ -118,6 +126,7 @@ public class BookInfoActivity extends AppCompatActivity {
         btn_read_now.setOnClickListener(onClickListener);
         btn_book_report.setOnClickListener(onClickListener);
         btn_select_book.setOnClickListener(onClickListener);
+        btn_post_book.setOnClickListener(onClickListener);
     }
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -148,6 +157,7 @@ public class BookInfoActivity extends AppCompatActivity {
                     intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("isRandomChat",isRandomChat);
                     intent.putExtra("book_title",bTitle);
+                    intent.putExtra("book_image",bImg);
                     startActivity(intent);
                     break;
                 case R.id.btn_book_report:
@@ -155,6 +165,7 @@ public class BookInfoActivity extends AppCompatActivity {
                     intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("isBookReport",isBookReport);
                     intent.putExtra("book_title",bTitle);
+                    intent.putExtra("book_image",bImg);
                     startActivity(intent);
                     break;
                 case R.id.btn_select_book:
@@ -162,6 +173,12 @@ public class BookInfoActivity extends AppCompatActivity {
                     intent.putExtra("date",gc);
                     intent.putExtra("book_info",bookInfo);
                     startActivity(intent);
+                    break;
+                case R.id.btn_post_book:
+                    intent = new Intent(getApplicationContext(),PostActivity.class);
+                    intent.putExtra("book_info",bookInfo);
+                    startActivity(intent);
+                    finish();
                     break;
             }
         }

@@ -52,6 +52,7 @@ public class FragSearch extends Fragment {
 
     private boolean isRandomChat,isBookReport;
     private GregorianCalendar gc;
+    private Boolean isPost;
 
     public static FragSearch newInstance(){
         return new FragSearch();
@@ -67,6 +68,7 @@ public class FragSearch extends Fragment {
 
         if(getArguments()!=null){
             gc = (GregorianCalendar)getArguments().getSerializable("date");
+            isPost = getArguments().getBoolean("isPost", false);
         }
         getParentFragmentManager().setFragmentResultListener("chat",this, new FragmentResultListener() {
             @Override
@@ -77,6 +79,8 @@ public class FragSearch extends Fragment {
                 System.out.println("isBookReport : " +isBookReport);
             }
         });
+
+        System.out.println("soopy"+"yes");
 
         charactor_view = view.findViewById(R.id.charactor_view);
         rcv = view.findViewById(R.id.search_list);
@@ -197,6 +201,7 @@ public class FragSearch extends Fragment {
                                 intent.putExtra("isRandomChat",isRandomChat);
                                 intent.putExtra("isBookReport",isBookReport);
                                 intent.putExtra("date",gc);
+                                intent.putExtra("isPost", isPost);
                                 startActivity(intent);
                             }
                         }

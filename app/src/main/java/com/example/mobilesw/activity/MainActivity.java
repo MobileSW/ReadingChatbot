@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private int fragnum;
 
     private GregorianCalendar gc;
+    private Boolean isPost;
 
 
     @Override
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         isRandomChat = intent.getBooleanExtra("isRandomChat",false);
         isBookReport = intent.getBooleanExtra("isBookReport",false);
+        isPost = intent.getBooleanExtra("isPost", false);
         //isCalendar = intent.getBooleanExtra("isCalendar",false);
         gc = (GregorianCalendar)intent.getSerializableExtra("date");
 
@@ -85,16 +87,20 @@ public class MainActivity extends AppCompatActivity {
                 FragHome fragHome = new FragHome();
                 if(isRandomChat){
                     String bookT = intent.getStringExtra("book_title");
+                    String bookI = intent.getStringExtra("book_image");
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("isRandomChat",true);
                     bundle.putString("book_title",bookT);
+                    bundle.putString("book_image",bookI);
                     fragHome.setArguments(bundle);
                 }
                 if(isBookReport){
                     String bookT = intent.getStringExtra("book_title");
+                    String bookI = intent.getStringExtra("book_image");
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("isBookReport",true);
                     bundle.putString("book_title",bookT);
+                    bundle.putString("book_image",bookI);
                     fragHome.setArguments(bundle);
                 }
 
@@ -110,6 +116,11 @@ public class MainActivity extends AppCompatActivity {
                     bundle.putSerializable("date",gc);
                     fragSearch.setArguments(bundle);
                 }
+                if(isPost) {
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("isPost", true);
+                    fragSearch.setArguments(bundle);
+                }
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.main_frame, fragSearch)
                         .commit();
@@ -121,13 +132,21 @@ public class MainActivity extends AppCompatActivity {
                         .commit();
                 break;
             case 3:
-                FragBoard fragPost = new FragBoard();
+                FragBoard fragBoard = new FragBoard();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.main_frame, fragBoard)
+                        .commit();
                 break;
             case 4: // 독서달력에서 내서로 넘어가야하는 경우
                 FragMyLibrary fragMyLibrary = new FragMyLibrary();
                 if(gc!=null){
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("date",gc);
+                    fragMyLibrary.setArguments(bundle);
+                }
+                if(isPost) {
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("isPost", true);
                     fragMyLibrary.setArguments(bundle);
                 }
                 getSupportFragmentManager().beginTransaction()

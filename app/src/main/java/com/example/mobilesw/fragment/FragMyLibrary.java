@@ -51,6 +51,7 @@ public class FragMyLibrary extends Fragment {
     TextView toolbar_title;
 
     private GregorianCalendar gc;
+    private Boolean isPost;
 
     SharedPreferences sp;
     @Override
@@ -64,6 +65,7 @@ public class FragMyLibrary extends Fragment {
 
         if(getArguments()!=null){
             gc = (GregorianCalendar)getArguments().getSerializable("date");
+            isPost = getArguments().getBoolean("isPost",false);
         }
 
         toolbar_title = view.findViewById(R.id.toolbar_title);
@@ -115,6 +117,7 @@ public class FragMyLibrary extends Fragment {
                                 //내 서재임을 나타낸다.
                                 intent.putExtra("isLibrary",true);
                                 intent.putExtra("date",gc);
+                                intent.putExtra("isPost",isPost);
                                 startActivity(intent);
                             }
                         }

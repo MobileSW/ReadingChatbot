@@ -117,5 +117,15 @@
             android:text="내 서재 담기"
             android:textSize="18sp"
             app:backgroundTint="#3E3E3E" />
+        <Button
+            android:id="@+id/btn_post_book"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_margin="1dp"
+            android:text="독후감에 추가"
+            android:textSize="18sp"
+            app:backgroundTint="#3E3E3E"
+            android:visibility="gone"/>
     </LinearLayout>
 </LinearLayout>
