@@ -6,16 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".fragment.FragCalendar">
 
-    <include
-        android:id="@+id/library_toolbar"
-        layout="@layout/view_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/library_toolbar"
         android:id="@+id/book_list"/>
 
 

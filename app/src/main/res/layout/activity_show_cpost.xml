@@ -8,6 +8,12 @@
     tools:context=".activity.PostCalendarAvtivity"
     android:id="@+id/layout_calendar_post">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/view_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -15,22 +21,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tv_select_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_gravity="center_horizontal"
-                android:text="선택한 날짜"
-                android:textSize="18sp"/>
-
 
             <LinearLayout
                 android:id="@+id/layout_cbook"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
                 android:layout_gravity="center"
                 android:visibility="visible"
                 android:orientation="vertical">
@@ -66,20 +66,28 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="50dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_gravity="center"
+                android:background="#ffffff"
                 android:orientation="vertical"
                 >
                 <TextView
                     android:id="@+id/tv_des_user"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
                     android:text="XX 님의 한줄평!"/>
                 <TextView
                     android:id="@+id/tv_des"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
+                    android:textSize="15sp"
+                    android:lineSpacingExtra="8dp"
                     android:text="한줄평"/>
             </LinearLayout>
         </LinearLayout>

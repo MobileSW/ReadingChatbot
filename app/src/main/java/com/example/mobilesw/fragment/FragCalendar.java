@@ -181,11 +181,13 @@ public class FragCalendar extends Fragment {
                         fmt.setCalendar(gc);
                         String fm = fmt.format(gc.getTime());
                         if(date.contains(fm)) {
-                            HashMap<String,String> hm = new HashMap<String,String>();
+//                            HashMap<String,String> hm = new HashMap<String,String>();
                             int idx = date.indexOf(fm);
-                            hm = booklist.get(idx);
+//                            hm = booklist.get(idx);
                             intent = new Intent(getContext(), ShowCalendarPost.class);
-                            intent.putExtra("cPostInfo",hm);
+                            intent.putExtra("calbook_list",booklist);
+                            intent.putExtra("pos",idx);
+//                            intent.putExtra("cPostInfo",hm);
                             startActivity(intent);
                         }else{
                             intent = new Intent(getContext(), PostCalendarAvtivity.class);

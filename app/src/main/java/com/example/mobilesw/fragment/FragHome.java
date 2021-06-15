@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -62,6 +64,10 @@ public class FragHome extends Fragment {
     private ListView listView;
     private BottomNavigationView chatNavi;
 
+    private TextView toolbar_title;
+    private Toolbar toolbar;
+
+
     private FragmentManager childFragment;
 
     private ArrayList<ChatItem> messageItems=new ArrayList<>();
@@ -103,7 +109,9 @@ public class FragHome extends Fragment {
         chatNavi = view.findViewById(R.id.chatMenuNavi);
         mainIcon = view.findViewById(R.id.main_charactor);
 
-
+        setHasOptionsMenu(true);
+//        toolbar_title = view.findViewById(R.id.toolbar_title);
+//        toolbar_title.setText("채팅봇");
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userId = user.getUid();

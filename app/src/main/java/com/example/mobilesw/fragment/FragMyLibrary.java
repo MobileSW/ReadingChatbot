@@ -59,17 +59,13 @@ public class FragMyLibrary extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_mylibrary, container, false);
 
-        sp = getContext().getSharedPreferences("sp", Context.MODE_PRIVATE);
-        String name = sp.getString("name", "");
-        System.out.println("이름 : "+name);
-
         if(getArguments()!=null){
             gc = (GregorianCalendar)getArguments().getSerializable("date");
             isPost = getArguments().getBoolean("isPost",false);
         }
 
-        toolbar_title = view.findViewById(R.id.toolbar_title);
-        toolbar_title.setText(name+"님의 서재");
+//        toolbar_title = view.findViewById(R.id.toolbar_title);
+//        toolbar_title.setText(name+"님의 서재");
 
         rcv = view.findViewById(R.id.book_list);
         glm = new GridLayoutManager(getContext(),3);
@@ -79,7 +75,7 @@ public class FragMyLibrary extends Fragment {
 
         db = FirebaseFirestore.getInstance();
         docRef = db.collection("users").document(user.getUid());
-        docRef.update("mybook", FieldValue.arrayUnion());
+        //docRef.update("mybook", FieldValue.arrayUnion());
 
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

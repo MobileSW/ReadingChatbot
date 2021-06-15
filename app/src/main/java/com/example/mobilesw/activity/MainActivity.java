@@ -1,13 +1,16 @@
 package com.example.mobilesw.activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.AlertDialog;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.mobilesw.R;
 import com.example.mobilesw.fragment.FragCalendar;
@@ -52,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
     FirebaseUser user = mAuth.getCurrentUser();
     private FirebaseFirestore db;
 
+    private Toolbar toolbar;
+    private ActionBar actionBar;
+    private TextView toolbar_title;
     private BottomNavigationView bottomNavigationView;
     private FragmentManager fm;
     private FragmentTransaction ft;
@@ -67,11 +74,24 @@ public class MainActivity extends AppCompatActivity {
     private GregorianCalendar gc;
     private Boolean isPost;
 
+    SharedPreferences sp;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.frag_default);
+
+        sp = getSharedPreferences("sp", Context.MODE_PRIVATE);
+        String name = sp.getString("name", "");
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
+
+        toolbar_title = findViewById(R.id.toolbar_title);
 
         Intent intent = getIntent();
         isRandomChat = intent.getBooleanExtra("isRandomChat",false);
@@ -107,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.main_frame, fragHome)
                         .commit();
+                toolbar_title.setText("채팅봇");
                 break;
             case 1: //독서달력에서 책 검색으로 넘어가야하는 경우
                 FragSearch fragSearch = new FragSearch();
@@ -124,18 +145,21 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.main_frame, fragSearch)
                         .commit();
+                toolbar_title.setText("책 검색");
                 break;
             case 2:
                 FragCalendar fragCalendar = new FragCalendar();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.main_frame, fragCalendar)
                         .commit();
+                toolbar_title.setText("독서 달력");
                 break;
             case 3:
                 FragBoard fragBoard = new FragBoard();
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.main_frame, fragBoard)
                         .commit();
+                toolbar_title.setText("독후감 갤러리");
                 break;
             case 4: // 독서달력에서 내서로 넘어가야하는 경우
                 FragMyLibrary fragMyLibrary = new FragMyLibrary();
@@ -152,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.main_frame, fragMyLibrary)
                         .commit();
+                toolbar_title.setText(name+"님의 서재");
                 break;
 
         }
@@ -194,18 +219,21 @@ public class MainActivity extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.main_frame, fragHome)
                                 .commit();
+                        toolbar_title.setText("채팅봇");
                         return true;
                     case R.id.menu_search:
                         FragSearch fragSearch = new FragSearch();
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.main_frame, fragSearch)
-                                .commit(); 
+                                .commit();
+                        toolbar_title.setText("책 검색");
                         return true;
                     case R.id.menu_board:
                         FragBoard fragBoard = new FragBoard();
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.main_frame, fragBoard)
                                 .commit();
+                        toolbar_title.setText("독후감 갤러리");
                         return true;
 
                     case R.id.menu_calendar:
@@ -213,12 +241,14 @@ public class MainActivity extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.main_frame, fragCalendar)
                                 .commit();
+                        toolbar_title.setText("독서 달력");
                         return true;
                     case R.id.menu_library:
                         FragMyLibrary fragMyLibrary = new FragMyLibrary();
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.main_frame, fragMyLibrary)
                                 .commit();
+                        toolbar_title.setText(name+"님의 서재");
                         return true;
 
                 }

@@ -179,6 +179,8 @@ public class FragSearch extends Fragment {
                     String pubdate = obj.getString("pubdate");
                     String description = obj.getString("description");
                     description = description.replaceAll("<(/)?([a-zA-Z]*)(\\\\s[a-zA-Z]*=[^>]*)?(\\\\s)*(/)?>","");
+                    description = description.replaceAll("&lt(;)?(/)?([a-zA-Z]*)(\\s[a-zA-Z]*=[^>]*)?(\\s)*(/)?&gt(;)?","");
+
                     if(pubdate.length()==8){
                         pubdate = pubdate.substring(0,4)+"-"+pubdate.substring(4,6)+"-"+pubdate.substring(6,8);
                     }

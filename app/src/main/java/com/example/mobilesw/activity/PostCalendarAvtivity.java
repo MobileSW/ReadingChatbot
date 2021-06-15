@@ -40,13 +40,18 @@ public class PostCalendarAvtivity extends AppCompatActivity {
     private Button btn_my_library,btn_search_book,btn_post_calendar;
     private EditText edit_post_calendar;
     private BookInfo bookInfo;
-    private String sd;
+
+    private String selectDate="",bookTitle="",bookAuthor="",bookImage="",bookComment="";
 
     private LinearLayout layout_buttons, layout_cbook;
 
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseFirestore db;
     DocumentReference docRef;
+
+    private HashMap<String,String> info;
+    private int pos;
+    private ArrayList<HashMap<String, String>> booklist;
 
 
     @Override
@@ -59,12 +64,12 @@ public class PostCalendarAvtivity extends AppCompatActivity {
         bookInfo = (BookInfo)intent.getSerializableExtra("book_info");
         gc = (GregorianCalendar)intent.getSerializableExtra("date");
 
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-        fmt.setCalendar(gc);
-        sd = fmt.format(gc.getTime());
-        //sd = ""+gc.get(Calendar.YEAR)+"-"+(gc.get(Calendar.MONTH)+1)+"-"+gc.get(Calendar.DAY_OF_MONTH);
+        booklist = (ArrayList<HashMap<String, String>>)intent.getSerializableExtra("calbook_list");
+        pos = intent.getIntExtra("pos",0);
 
-
+        if(booklist!=null){
+            info = booklist.get(pos);
+        }
 
         tv_select_date = findViewById(R.id.tv_select_date);
         btn_my_library = findViewById(R.id.btn_my_library);
@@ -77,25 +82,49 @@ public class PostCalendarAvtivity extends AppCompatActivity {
         c_book_author = findViewById(R.id.c_book_author);
         c_book_image  = findViewById(R.id.c_book_image);
 
-        tv_select_date.setText(sd);
+        //수정하는 경우
+        if(info!=null){
+            System.out.println("수정");
+            layout_buttons.setVisibility(layout_buttons.GONE);
+            layout_cbook.setVisibility(layout_cbook.VISIBLE);
+            selectDate = info.get("date");
+            bookTitle = info.get("title");
+            bookAuthor = info.get("author");
+            bookImage = info.get("image");
+            bookComment =info.get("comment");
+            edit_post_calendar.setText(bookComment);
+        }else{
+            System.out.println("수정아님");
+            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+            fmt.setCalendar(gc);
+            selectDate = fmt.format(gc.getTime());
+            if(bookInfo!=null){
+                System.out.println("수정아니고 새로 등록");
+                layout_buttons.setVisibility(layout_buttons.GONE);
+                layout_cbook.setVisibility(layout_cbook.VISIBLE);
+
+                bookTitle = bookInfo.getTitle();
+                bookAuthor = bookInfo.getAuthor();
+                bookImage = bookInfo.getImg();
+            }
+        }
+
+        //sd = ""+gc.get(Calendar.YEAR)+"-"+(gc.get(Calendar.MONTH)+1)+"-"+gc.get(Calendar.DAY_OF_MONTH);
+
+
+
+        c_book_title.setText(bookTitle);
+        c_book_author.setText(bookAuthor);
+        tv_select_date.setText(selectDate);
+        if(!bookImage.equals("")){
+            //Picasso.get().load(image).into(holder.img);
+            Glide.with(this).load(bookImage).into(c_book_image);
+        }
 
         btn_my_library.setOnClickListener(onClickListener);
         btn_search_book.setOnClickListener(onClickListener);
         btn_post_calendar.setOnClickListener(onClickListener);
 
-        if(bookInfo!=null){
-            layout_buttons.setVisibility(layout_buttons.GONE);
-            layout_cbook.setVisibility(layout_cbook.VISIBLE);
-
-            c_book_title.setText(bookInfo.getTitle());
-            c_book_author.setText(bookInfo.getAuthor());
-
-            String image = bookInfo.getImg();
-            if(!image.equals("")){
-                //Picasso.get().load(image).into(holder.img);
-                Glide.with(this).load(image).into(c_book_image);
-            }
-        }
     }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -114,7 +143,7 @@ public class PostCalendarAvtivity extends AppCompatActivity {
                     startActivity(intent);
                     break;
                 case R.id.btn_post_calendar:
-                    if(bookInfo==null) {
+                    if(info==null&&bookInfo==null) {
                         Toast.makeText(PostCalendarAvtivity.this, "책 정보를 가져오세요.", Toast.LENGTH_SHORT).show();
                     }else{
                         db = FirebaseFirestore.getInstance();
@@ -126,15 +155,20 @@ public class PostCalendarAvtivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 DocumentSnapshot document = task.getResult();
                                 HashMap<String,String> post = new HashMap<String,String>();
-                                post.put("title",bookInfo.getTitle());
-                                post.put("author",bookInfo.getAuthor());
-                                post.put("image",bookInfo.getImg());
+                                post.put("title",bookTitle);
+                                post.put("author",bookAuthor);
+                                post.put("image",bookImage);
                                 post.put("comment",edit_post_calendar.getText().toString());
-                                post.put("date",sd);
+                                post.put("date",selectDate);
 
-                                ArrayList<HashMap<String,String>> cPost = (ArrayList<HashMap<String,String>>) document.get("bookCalendar");
-                                cPost.add(post);
-                                updateDB(cPost);
+                                if(info!=null){
+                                    booklist.set(pos,post);
+                                    docRef.update("bookCalendar",booklist);
+                                }else{
+                                    ArrayList<HashMap<String,String>> cPost = (ArrayList<HashMap<String,String>>) document.get("bookCalendar");
+                                    cPost.add(post);
+                                    updateDB(cPost);
+                                }
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);

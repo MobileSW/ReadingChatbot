@@ -6,8 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.mobilesw.info.PostInfo;
 import com.example.mobilesw.R;
@@ -18,6 +21,8 @@ public class BoardActivity extends AppCompatActivity {
     private ReadContentsView readContentsVIew;
     private LinearLayout contentsLayout;
 
+    private TextView toolbar_title;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +31,9 @@ public class BoardActivity extends AppCompatActivity {
         postInfo = (PostInfo) getIntent().getSerializableExtra("postInfo");
         contentsLayout = findViewById(R.id.contentsLayout);
         readContentsVIew = findViewById(R.id.readContentsView);
+
+        toolbar_title = findViewById(R.id.toolbar_title);
+        toolbar_title.setText("작성한 독후감");
 
         uiUpdate();
     }
