@@ -216,11 +216,9 @@ public class MainActivity extends AppCompatActivity {
         editor.clear();
         editor.commit();
 
-        System.out.println("suhyun"+user+uid);
-
         // DB에 저장된 정보 삭제
         userDelete(uid);
-        postDelete("BookPosts","user_id",uid);
+        postDelete("posts","user_id",uid);
         postDelete("records","publisher",uid);
         chatDelete(uid);
         storageDelete(uid);
