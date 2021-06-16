@@ -6,29 +6,29 @@
         android:id="@+id/chat_timer"
         android:title="독서 시간 측정"
         android:icon="@drawable/chat_timer"
-        app:showAsAction="never" />
+        android:enabled="true" />
 
     <item
         android:id="@+id/chat_alarm"
         android:title="알림 설정"
         android:icon="@drawable/chat_alarm"
-        app:showAsAction="never" />
+        android:enabled="true" />
 
     <item
         android:id="@+id/chat_question"
         android:title="랜덤 질문"
         android:icon="@drawable/chat_question"
-        app:showAsAction="never" />
+        android:enabled="true" />
 
     <item
         android:id="@+id/chat_report"
         android:title="독후감 작성"
         android:icon="@drawable/chat_report"
-        app:showAsAction="never" />
+        android:enabled="true" />
 
     <item
         android:id="@+id/chat_delete"
         android:title="채팅 초기화"
         android:icon="@drawable/chat_delete"
-        app:showAsAction="never" />
+        android:enabled="true" />
 </menu>

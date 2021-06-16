@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayShowTitleEnabled(false);
 
         toolbar_title = findViewById(R.id.toolbar_title);
+        bottomNavigationView = findViewById(R.id.bottomNavi);
 
         Intent intent = getIntent();
         isRandomChat = intent.getBooleanExtra("isRandomChat",false);
@@ -160,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
                         .replace(R.id.main_frame, fragBoard)
                         .commit();
                 toolbar_title.setText("독후감 갤러리");
+                bottomNavigationView.setSelectedItemId(R.id.menu_board);
                 break;
             case 4: // 독서달력에서 내서로 넘어가야하는 경우
                 FragMyLibrary fragMyLibrary = new FragMyLibrary();
@@ -208,7 +210,6 @@ public class MainActivity extends AppCompatActivity {
 
         // 메뉴 바 아이콘을 눌렀을 때의 화면 동작
         // 각 화면 코드는 fragment 폴더에 있음
-        bottomNavigationView = findViewById(R.id.bottomNavi);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

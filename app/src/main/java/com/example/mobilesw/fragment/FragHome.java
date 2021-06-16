@@ -62,7 +62,7 @@ public class FragHome extends Fragment {
     private Button menuBtn;
     private EditText et;
     private ListView listView;
-    private BottomNavigationView chatNavi;
+    private BottomNavigationView chatNavi, bottomNavigationView;
 
     private TextView toolbar_title;
     private Toolbar toolbar;
@@ -107,7 +107,9 @@ public class FragHome extends Fragment {
         listView=view.findViewById(R.id.listView);
         listView.setVisibility(listView.INVISIBLE);
         chatNavi = view.findViewById(R.id.chatMenuNavi);
+        bottomNavigationView = getActivity().findViewById(R.id.bottomNavi);
         mainIcon = view.findViewById(R.id.main_charactor);
+        toolbar_title = getActivity().findViewById(R.id.toolbar_title);
 
         setHasOptionsMenu(true);
 //        toolbar_title = view.findViewById(R.id.toolbar_title);
@@ -217,6 +219,7 @@ public class FragHome extends Fragment {
                         adapter=new ChatAdapter(messageItems,getLayoutInflater());
                         listView.setAdapter(adapter);
                         mainIcon.setVisibility(View.VISIBLE);
+                        setUI();
 
                 }
                 return false;
@@ -300,8 +303,6 @@ public class FragHome extends Fragment {
                 Boolean report = bd.getBoolean("report");
                 String answer = bd.getString("answer");
 
-                System.out.println("soopy"+reportNum);
-
                 // 랜덤 질문 상태인지 독후감 작성 상태인지 기록, 사용자 채팅 허용
                 if (report) {
                     isReport = true;
@@ -357,7 +358,6 @@ public class FragHome extends Fragment {
             isBookReport = getArguments().getBoolean("isBookReport");
             book_title = getArguments().getString("book_title");
             book_image = getArguments().getString("book_image");
-            System.out.println("soopy"+book_image);
             System.out.println("랜덤챗으로 다시 돌아왔는가?" + isRandomChat);
             if(isRandomChat){
                 questionNum=1;
@@ -544,7 +544,6 @@ public class FragHome extends Fragment {
         if(book_image!= null){
             contents.add(book_image);
         }
-        System.out.println("soopy"+answerStr);
 
         PostInfo postInfo = new PostInfo(book_title+" 독후감", answerStr, contents, auth.getUid() ,new Date());
         docRef.set(postInfo.getPostInfo())
@@ -583,12 +582,10 @@ public class FragHome extends Fragment {
     }
 
     private void startIntent() {
-        Intent intent= new Intent(getActivity(),MainActivity.class);;
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra("fragnum",3);
-        startActivity(intent);
+        ((MainActivity)getActivity()).replaceFragment(FragBoard.newInstance());
+        getParentFragmentManager().beginTransaction().commit();
+        toolbar_title.setText("독후감 갤러리");
+        bottomNavigationView.setSelectedItemId(R.id.menu_board);
     }
 
 
