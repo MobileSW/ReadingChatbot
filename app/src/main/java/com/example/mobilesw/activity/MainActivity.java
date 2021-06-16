@@ -316,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
 
         // DB에 저장된 정보 삭제
         userDelete(uid);
-        postDelete("posts","user_id",uid);
+        postDelete("posts","publisher",uid);
         postDelete("records","publisher",uid);
         chatDelete(uid);
         storageDelete(uid);
