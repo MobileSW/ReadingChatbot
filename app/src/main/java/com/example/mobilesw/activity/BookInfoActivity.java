@@ -28,12 +28,13 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 public class BookInfoActivity extends AppCompatActivity {
 
     private BookInfo bookInfo;
-    private Button btn_to_library,btn_read_now,btn_book_report;
+    private Button btn_to_library,btn_read_now,btn_book_report,btn_select_book,btn_post_book;
     private HashMap<String,String> book;
 
     private String bTitle="",bAuthor="",bImg="",bPubdate="",bPublisher="",bDesc ="";
@@ -42,7 +43,8 @@ public class BookInfoActivity extends AppCompatActivity {
     FirebaseFirestore db;
     DocumentReference docRef;
 
-    private boolean isRandomChat,isBookReport;
+    private boolean isRandomChat,isBookReport,isLibrary,isPost;
+    private GregorianCalendar gc;
 
 
     @Override
@@ -53,24 +55,44 @@ public class BookInfoActivity extends AppCompatActivity {
         btn_to_library= findViewById(R.id.btn_to_library);
         btn_read_now = findViewById(R.id.btn_read_now);
         btn_book_report = findViewById(R.id.btn_book_report);
-
-
+        btn_select_book = findViewById(R.id.btn_select_book);
+        btn_post_book = findViewById(R.id.btn_post_book);
 
         Intent intent = getIntent();
         bookInfo = (BookInfo)intent.getSerializableExtra("bookInfo");
-        int isLibrary=(int)intent.getIntExtra("library",0);
+        isLibrary=intent.getBooleanExtra("isLibrary",false);
         isRandomChat = intent.getBooleanExtra("isRandomChat",false);
         isBookReport = intent.getBooleanExtra("isBookReport",false);
+        isPost = intent.getBooleanExtra("isPost",false);
+        gc = (GregorianCalendar)intent.getSerializableExtra("date");
 
-        System.out.println("isRandomChat : " +isRandomChat);
-        System.out.println("isBookReport : " +isBookReport);
+
+        //만약 서재일 경우 -> 버튼 없애기
+        LinearLayout ll_btn_library = findViewById(R.id.ll_btn_library);
+        if(isLibrary){
+            ll_btn_library.setVisibility(ll_btn_library.GONE);
+        }
+        //만약 랜덤채팅일 경우 -> '바로 읽기' 버튼으로 변경
         if(isRandomChat){
             btn_to_library.setVisibility(btn_to_library.GONE);
             btn_read_now.setVisibility(btn_read_now.VISIBLE);
         }
+        // 만약 독후감일 경우 -> '독후감 작성하기' 버튼으로 변경
         if(isBookReport){
             btn_to_library.setVisibility(btn_to_library.GONE);
             btn_book_report.setVisibility(btn_book_report.VISIBLE);
+        }
+        // 만약 캘린더일 경우 -> 1. 검색 2. 내서재
+        if(gc!=null){
+            ll_btn_library.setVisibility(ll_btn_library.VISIBLE);
+            btn_to_library.setVisibility(btn_to_library.GONE);
+            btn_select_book.setVisibility(btn_select_book.VISIBLE);
+        }
+        // 만약 독후감 글쓰기인 경우
+        if(isPost){
+            ll_btn_library.setVisibility(ll_btn_library.VISIBLE);
+            btn_to_library.setVisibility(btn_to_library.GONE);
+            btn_post_book.setVisibility(btn_post_book.VISIBLE);
         }
 
         bTitle=bookInfo.getTitle();
@@ -80,10 +102,6 @@ public class BookInfoActivity extends AppCompatActivity {
         bPublisher=bookInfo.getPublisher();
         bDesc=bookInfo.getDescription();
 
-        LinearLayout ll_btn_library = findViewById(R.id.ll_btn_library);
-        if(isLibrary==1){
-            ll_btn_library.setVisibility(ll_btn_library.GONE);
-        }
 
         //책 제목 설정
         TextView title = findViewById(R.id.d_book_title);
@@ -107,6 +125,8 @@ public class BookInfoActivity extends AppCompatActivity {
         btn_to_library.setOnClickListener(onClickListener);
         btn_read_now.setOnClickListener(onClickListener);
         btn_book_report.setOnClickListener(onClickListener);
+        btn_select_book.setOnClickListener(onClickListener);
+        btn_post_book.setOnClickListener(onClickListener);
     }
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -137,6 +157,7 @@ public class BookInfoActivity extends AppCompatActivity {
                     intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("isRandomChat",isRandomChat);
                     intent.putExtra("book_title",bTitle);
+                    intent.putExtra("book_image",bImg);
                     startActivity(intent);
                     break;
                 case R.id.btn_book_report:
@@ -144,7 +165,20 @@ public class BookInfoActivity extends AppCompatActivity {
                     intent.addFlags(intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("isBookReport",isBookReport);
                     intent.putExtra("book_title",bTitle);
+                    intent.putExtra("book_image",bImg);
                     startActivity(intent);
+                    break;
+                case R.id.btn_select_book:
+                    intent = new Intent(getApplicationContext(),PostCalendarAvtivity.class);
+                    intent.putExtra("date",gc);
+                    intent.putExtra("book_info",bookInfo);
+                    startActivity(intent);
+                    break;
+                case R.id.btn_post_book:
+                    intent = new Intent(getApplicationContext(),PostActivity.class);
+                    intent.putExtra("book_info",bookInfo);
+                    startActivity(intent);
+                    finish();
                     break;
             }
         }

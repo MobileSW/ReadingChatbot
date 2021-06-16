@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.PostCalendarAvtivity"
+    android:id="@+id/layout_calendar_post">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/view_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/layout_cbook"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:layout_gravity="center"
+                android:visibility="visible"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/c_book_image"
+                    android:layout_width="200dp"
+                    android:layout_height="300dp"
+                    android:elevation="10dp"
+                    android:background="#ffffff"
+                    android:src="@drawable/img_book"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/c_book_title"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:layout_margin="10dp"
+                    android:textSize="20sp"
+                    android:text="책 제목"
+                    android:textColor="@color/black"/>
+                <TextView
+                    android:id="@+id/c_book_author"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textSize="18sp"
+                    android:text="작가"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:background="#ffffff"
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:id="@+id/tv_des_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
+                    android:text="XX 님의 한줄평!"/>
+                <TextView
+                    android:id="@+id/tv_des"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:textSize="15sp"
+                    android:lineSpacingExtra="8dp"
+                    android:text="한줄평"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

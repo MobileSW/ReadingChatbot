@@ -15,7 +15,7 @@
         android:padding="12dp"
         android:maxWidth="250dp"
         android:background="@drawable/back_chatbox"
-        android:textColor="#ffffff"/>
+        android:textColor="#000000"/>
     <TextView
         android:id="@+id/tv_time"
         android:layout_width="wrap_content"

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.PostCalendarAvtivity"
+    android:id="@+id/layout_calendar_post">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_select_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_gravity="center_horizontal"
+                android:text="선택한 날짜"
+                android:textSize="18sp"/>
+
+
+            <LinearLayout
+                android:id="@+id/layout_twobuttons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="50dp"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center"
+                    android:text="책을 선택해주세요!"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/btn_my_library"
+                        android:layout_width="120dp"
+                        android:layout_height="150dp"
+                        android:layout_margin="5dp"
+                        android:backgroundTint="@color/aqua"
+                        android:text="내 서재"
+                        android:textSize="20sp" />
+
+                    <Button
+                        android:id="@+id/btn_search_book"
+                        android:layout_width="120dp"
+                        android:layout_height="150dp"
+                        android:layout_margin="5dp"
+                        android:backgroundTint="@color/aqua"
+                        android:text="책 검색"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_cbook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/c_book_image"
+                    android:layout_width="200dp"
+                    android:layout_height="300dp"
+                    android:elevation="10dp"
+                    android:background="#ffffff"
+                    android:src="@drawable/img_book"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/c_book_title"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:layout_margin="10dp"
+                    android:textSize="20sp"
+                    android:text="책 제목"
+                    android:textColor="@color/black"/>
+                <TextView
+                    android:id="@+id/c_book_author"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textSize="18sp"
+                    android:text="작가"/>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="50dp"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                >
+                <EditText
+                    android:id="@+id/edit_post_calendar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:hint="글을 작성할 수 있습니다."/>
+                <Button
+                    android:id="@+id/btn_post_calendar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="등록하기"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

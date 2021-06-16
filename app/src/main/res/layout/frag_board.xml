@@ -1,37 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.FragCalendar"
-    android:id="@+id/FragBoardLayout">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.FragBoard">
 
-    <FrameLayout
-        android:id="@+id/main_container"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_marginTop="18dp">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_below="@+id/board_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+    </androidx.recyclerview.widget.RecyclerView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/blog_list_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="239dp"
+        android:layout_marginBottom="120dp"
+        android:layout_marginTop="110dp"
+        android:gravity="center"
+        android:lineSpacingExtra="8dp"
+        android:textColor="#6C6C6C"
+        android:textSize="18sp" />
 
-        <ImageButton
-            android:id="@+id/add_new_post_button"
-            android:layout_width="45dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="17dp"
-            android:background="@color/colorPrimaryDark"
-            android:baselineAlignBottom="true"
-            android:contentDescription="@string/press_to_upload_post"
-            android:focusableInTouchMode="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/add_post" />
-
-    </FrameLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/write_post"
+        android:backgroundTint="@color/yellow"
+        app:borderWidth="0dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:clickable="true"
+        android:src="@drawable/plus"/>
 
 </RelativeLayout>

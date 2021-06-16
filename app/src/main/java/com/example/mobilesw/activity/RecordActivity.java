@@ -13,7 +13,6 @@ import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bumptech.glide.Glide;
 import com.example.mobilesw.info.RecordInfo;
 import com.example.mobilesw.R;
 import com.example.mobilesw.view.ContentsItemView;
@@ -105,7 +104,7 @@ public class RecordActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             String path = data.getStringExtra(INTENT_PATH);
             pathList.add(path);
-
+            /*
             ContentsItemView contentsItemView = new ContentsItemView(this);
 
             if (selectedEditText == null) {
@@ -128,6 +127,8 @@ public class RecordActivity extends AppCompatActivity {
                 }
             });
             contentsItemView.setOnFocusChangeListener(onFocusChangeListener);
+
+             */
         }
     }
 

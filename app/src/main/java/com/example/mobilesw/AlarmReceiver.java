@@ -72,7 +72,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 // 노티피케이션 채널을 시스템에 등록
                 notificationManager.createNotificationChannel(channel);
             }
-        }else builder.setSmallIcon(R.mipmap.ic_launcher); // Oreo 이하에서 mipmap 사용하지 않으면 Couldn't create icon: StatusBarIcon 에러남
+        }else builder.setSmallIcon(R.mipmap.main_icon); // Oreo 이하에서 mipmap 사용하지 않으면 Couldn't create icon: StatusBarIcon 에러남
 
 
         String hour = String.valueOf(calendar.get(Calendar.HOUR_OF_DAY));

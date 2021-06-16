@@ -6,22 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".fragment.FragCalendar">
 
-    <TextView
-        android:id="@+id/board_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="독서 검색"
-        android:textStyle="bold"
-        android:layout_margin="10sp"
-        android:textColor="#000000"
-        android:layout_centerHorizontal="true"
-        />
     <LinearLayout
         android:id="@+id/search_bar"
-        android:layout_below="@+id/board_name"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal"
         android:background="@drawable/border_search">
 
@@ -34,7 +23,7 @@
             app:backgroundTint="#707070" />
         <EditText
             android:id="@+id/edit_search"
-            android:layout_margin="3dp"
+            android:layout_margin="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ffffff"
@@ -44,10 +33,10 @@
     </LinearLayout>
     <RelativeLayout
         android:id="@+id/charactor_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
         android:layout_centerInParent="true"
-        android:background="@drawable/charactor_say"/>
+        android:background="@drawable/character_say"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_below="@+id/search_bar"
