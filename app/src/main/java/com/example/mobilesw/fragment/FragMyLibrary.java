@@ -84,62 +84,67 @@ public class FragMyLibrary extends Fragment {
                 books = new ArrayList<BookInfo>();
                 DocumentSnapshot document = task.getResult();
                 ArrayList<HashMap<String,String>> booklist = (ArrayList<HashMap<String, String>>) document.get("mybook");
-                for(int i=0;i<booklist.size();i++){
-                    HashMap<String,String> hm = booklist.get(i);
-                    String title = hm.get("title");
-                    String author = hm.get("author");
-                    String image = hm.get("img");
-                    String publisher = hm.get("publisher");
-                    String pubdate = hm.get("pubdate");
-                    String description = hm.get("description");
-                    description = description.replaceAll("<(/)?([a-zA-Z]*)(\\\\s[a-zA-Z]*=[^>]*)?(\\\\s)*(/)?>","");
-                    if(pubdate.length()==8){
-                        pubdate = pubdate.substring(0,4)+"-"+pubdate.substring(4,6)+"-"+pubdate.substring(6,8);
-                    }
-                    BookInfo bookInfo=new BookInfo(title,author,image,publisher,pubdate,description);
-                    books.add(bookInfo);
-                }
-                //books = (ArrayList<BookInfo>) document.get("mybook");
-                System.out.println("책 배열 : "+books);
-                libraryAdapter=new LibraryAdapter(getContext(),books); //앞서 만든 리스트를 어댑터에 적용시켜 객체를 만든다.
-                libraryAdapter.setOnItemClickListener(
-                        new LibraryAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(View v, int pos) {
-                                BookInfo obj = books.get(pos);
-                                Intent intent = new Intent(getContext(), BookInfoActivity.class);
-                                //목록에서 클릭한 게시물에 대한 내용을 전달
-                                intent.putExtra("bookInfo", (Serializable) obj);
-                                //내 서재임을 나타낸다.
-                                intent.putExtra("isLibrary",true);
-                                intent.putExtra("date",gc);
-                                intent.putExtra("isPost",isPost);
-                                startActivity(intent);
-                            }
+                try {
+                    for(int i=0;i<booklist.size();i++){
+                        HashMap<String,String> hm = booklist.get(i);
+                        String title = hm.get("title");
+                        String author = hm.get("author");
+                        String image = hm.get("img");
+                        String publisher = hm.get("publisher");
+                        String pubdate = hm.get("pubdate");
+                        String description = hm.get("description");
+                        description = description.replaceAll("<(/)?([a-zA-Z]*)(\\\\s[a-zA-Z]*=[^>]*)?(\\\\s)*(/)?>","");
+                        if(pubdate.length()==8){
+                            pubdate = pubdate.substring(0,4)+"-"+pubdate.substring(4,6)+"-"+pubdate.substring(6,8);
                         }
-                );
-                libraryAdapter.setOnItemLongClickListener(new LibraryAdapter.OnItemLongClickListener() {
-                    @Override
-                    public void onItemLongClick(View v, int pos) {
-                        PopupMenu popupMenu = new PopupMenu(getContext(),v);
-                        getActivity().getMenuInflater().inflate(R.menu.library_book_menu,popupMenu.getMenu());
-                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item) {
-                                switch (item.getItemId()){
-                                    case R.id.book_delete:
-                                        Toast.makeText(getContext(),"삭제되었습니다.",Toast.LENGTH_SHORT).show();
-                                        booklist.remove(pos);
-                                        docRef.update("mybook",booklist);
-                                        return true;
-                                }
-                                return false;
-                            }
-                        });
-                        popupMenu.show();
+                        BookInfo bookInfo=new BookInfo(title,author,image,publisher,pubdate,description);
+                        books.add(bookInfo);
                     }
-                });
-                rcv.setAdapter(libraryAdapter);
+                    //books = (ArrayList<BookInfo>) document.get("mybook");
+                    System.out.println("책 배열 : "+books);
+                    libraryAdapter=new LibraryAdapter(getContext(),books); //앞서 만든 리스트를 어댑터에 적용시켜 객체를 만든다.
+                    libraryAdapter.setOnItemClickListener(
+                            new LibraryAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(View v, int pos) {
+                                    BookInfo obj = books.get(pos);
+                                    Intent intent = new Intent(getContext(), BookInfoActivity.class);
+                                    //목록에서 클릭한 게시물에 대한 내용을 전달
+                                    intent.putExtra("bookInfo", (Serializable) obj);
+                                    //내 서재임을 나타낸다.
+                                    intent.putExtra("isLibrary",true);
+                                    intent.putExtra("date",gc);
+                                    intent.putExtra("isPost",isPost);
+                                    startActivity(intent);
+                                }
+                            }
+                    );
+                    libraryAdapter.setOnItemLongClickListener(new LibraryAdapter.OnItemLongClickListener() {
+                        @Override
+                        public void onItemLongClick(View v, int pos) {
+                            PopupMenu popupMenu = new PopupMenu(getContext(),v);
+                            getActivity().getMenuInflater().inflate(R.menu.library_book_menu,popupMenu.getMenu());
+                            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem item) {
+                                    switch (item.getItemId()){
+                                        case R.id.book_delete:
+                                            Toast.makeText(getContext(),"삭제되었습니다.",Toast.LENGTH_SHORT).show();
+                                            booklist.remove(pos);
+                                            docRef.update("mybook",booklist);
+                                            return true;
+                                    }
+                                    return false;
+                                }
+                            });
+                            popupMenu.show();
+                        }
+                    });
+                    rcv.setAdapter(libraryAdapter);
+                }catch(Exception e){
+                    TextView tv_empty = view.findViewById(R.id.tv_empty);
+                    tv_empty.setVisibility(tv_empty.VISIBLE);
+                }
             }
         });
 

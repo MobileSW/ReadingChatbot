@@ -59,6 +59,7 @@ public class FragBoard extends Fragment {
 
         View view = inflater.inflate(R.layout.frag_board, container, false);
         text = (TextView)view.findViewById(R.id.text);
+        text = (TextView)view.findViewById(R.id.text);
         Bundle bundle = this.getArguments();
 
         firebaseFirestore = FirebaseFirestore.getInstance();

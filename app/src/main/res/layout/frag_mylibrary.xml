@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".fragment.FragCalendar">
 
+    <TextView
+        android:id="@+id/tv_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:text="서재가 비어있어요ㅠ\n 도서 검색을 통해 서재를 채워주세요!"
+        android:visibility="gone"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
